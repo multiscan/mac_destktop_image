@@ -6,7 +6,7 @@ laconf="$HOME/Library/LaunchAgents/desktop.background.rotate.plist"
 name="desktop.background.rotate"
 interval=10
 
-check_cron() {
+install() {
   if [ ! -f $laconf ] ; then
     cat > $laconf <<-____EOF
       <?xml version="1.0" encoding="UTF-8"?>
@@ -32,53 +32,23 @@ ____EOF
   launchctl list | grep -q "$name"  || launchctl load -w $laconf
 }
 
-status() {
-  # check_cron
-  launchctl list "$name" > /dev/null
-  if [ $? -eq 0 ] ; then
-    echo "configured"
-  else
-    echo "not configured"
-  fi
-}
-
-start() {
-  launchctl start $name
-  sleep 2
-  status
-}
-
-stop() {
-  echo "Stopping..."
-  launchctl stop $name
-  sleep 2
-  status
-}
-
-
-restart() {
-  stop
-  sleep 2
-  start
-}
-
-install() {
-  echo "Registering $name service"
-  sleep 2
-  check_cron
-  status
-}
-
-cleanup() {
-  stop
-  sleep 2
+remove() {
   echo "Unregistering $name service"
   launchctl remove $name
   rm -f $laconf  
 }
 
-reconfigure() {
-  cleanup
+status() {
+  launchctl list "$name" > /dev/null
+  if [ $? -eq 0 ] ; then
+    echo "installed"
+  else
+    echo "not installed"
+  fi
+}
+
+reinstall() {
+  remove
   sleep 2
   install
 }
@@ -96,13 +66,9 @@ oneshot() {
 }
 
 case $1 in 
-  start)       start   ; ;;
-  stop)        stop    ; ;;
-  restart)     restart ; ;;
-  install)     install ; ;;
-  remove)      cleanup ; ;;
-  uninstall)   cleanup ; ;;
-  reconfigure) reconfigure; ;;
+  start)       install ; ;;
+  stop)        remove  ; ;;
+  restart)     reinstall ; ;;
   status)      status; ;;
   *)           oneshot $* ; ;;
 esac
