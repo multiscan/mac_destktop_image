@@ -1,0 +1,26 @@
+---
+# The parent directory for 
+base: "/Users/cangiani/Pictures/Desktop/"
+defaults:
+  weight: 1
+  scaling: "fill"
+  bgcolor: "black"
+dirs:
+  -
+    dir: "Patterns"
+    weight: 4
+    scaling: "tile"
+  -
+    dir: "AssettoCorsa"
+    weight: 6
+  -
+    dir: "Vacanze/Namibia"
+    weight: 12
+  -
+    dir: "Vacanze/Case"
+  -
+    dir: "hubble"
+    scaling: "best"
+  -
+    dir: "Art"
+    scaling: "best"

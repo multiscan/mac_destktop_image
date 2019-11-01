@@ -1,0 +1,108 @@
+#!/bin/sh
+cmd="$(cd $(dirname $0); pwd)/$(basename $0)"       # readlink -f 
+pmd="$(cd $(dirname $0); pwd)/desktop_image.py"
+
+laconf="$HOME/Library/LaunchAgents/desktop.background.rotate.plist"
+name="desktop.background.rotate"
+interval=10
+
+check_cron() {
+  if [ ! -f $laconf ] ; then
+    cat > $laconf <<-____EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>Label</key>
+        <string>$name</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>sh</string>
+          <string>-c</string>
+          <string>$cmd</string>
+        </array>
+        <key>StartInterval</key>
+        <integer>$interval</integer>
+      </dict>
+      </plist>    
+____EOF
+  #         <key>RunAtLoad</key>
+  #         <true/>
+  fi
+  launchctl list | grep -q "$name"  || launchctl load -w $laconf
+}
+
+status() {
+  # check_cron
+  launchctl list "$name" > /dev/null
+  if [ $? -eq 0 ] ; then
+    echo "configured"
+  else
+    echo "not configured"
+  fi
+}
+
+start() {
+  launchctl start $name
+  sleep 2
+  status
+}
+
+stop() {
+  echo "Stopping..."
+  launchctl stop $name
+  sleep 2
+  status
+}
+
+
+restart() {
+  stop
+  sleep 2
+  start
+}
+
+install() {
+  echo "Registering $name service"
+  sleep 2
+  check_cron
+  status
+}
+
+cleanup() {
+  stop
+  sleep 2
+  echo "Unregistering $name service"
+  launchctl remove $name
+  rm -f $laconf  
+}
+
+reconfigure() {
+  cleanup
+  sleep 2
+  install
+}
+
+oneshot() {
+  pef="$(dirname $0)/.python-version"
+  if [ -f $pef ] ; then
+    export PYENV_VERSION=$(cat $pef)
+  fi
+  if [ -f $HOME/.pyenv/shims/python ] ; then
+    $HOME/.pyenv/shims/python $pmd 
+  else
+    python $pmd
+  fi
+}
+
+case $1 in 
+  start)       start   ; ;;
+  stop)        stop    ; ;;
+  restart)     restart ; ;;
+  install)     install ; ;;
+  remove)      cleanup ; ;;
+  uninstall)   cleanup ; ;;
+  reconfigure) reconfigure; ;;
+  status)      status; ;;
+  *)           oneshot $* ; ;;
+esac
