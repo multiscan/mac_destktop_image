@@ -1,26 +1,52 @@
 ---
-# The parent directory for 
+# The parent directory for all the desktop image directories
+# and the default settings to be used if not specified
 base: "/Users/cangiani/Pictures/Desktop/"
 defaults:
   weight: 1
   scaling: "fill"
   bgcolor: "black"
+# A list of image folders. Each with its configuration
+# The only mandatory parameter is 'dir'. All the other
+# are taken from defaults above. 
+# See below for details about parameters meaning 
 dirs:
+  -
+    dir: "Art"
+    scaling: "fit"
+  -
+    dir: "AssettoCorsa"
+    weight: 6
+  -
+    dir: "Hubble"
+    scaling: "best"
   -
     dir: "Patterns"
     weight: 4
     scaling: "tile"
   -
-    dir: "AssettoCorsa"
-    weight: 6
-  -
     dir: "Vacanze/Namibia"
     weight: 12
   -
     dir: "Vacanze/Case"
-  -
-    dir: "hubble"
-    scaling: "best"
-  -
-    dir: "Art"
-    scaling: "best"
+
+# Parameters for image folders:
+# dir:     the **mandatory** folder path with relative to 'base'  
+# weight:  relative proability for the folder to be used
+# bgcolor: name of the background color when the image does not cover screen
+#          possible values: black, white, grey, dark, brown, green
+#
+# scaling: how the image is fit to the screen
+#    - fit:    Stretches the image to fit the desktop's width and height;
+#    - tile:   Repeat image to fill screen;
+#    - centre: Centres the image without enlarging, however it 
+#              will reduce the size of an image that would 
+#              otherwise spill outside the boundary of the desktop;
+#    - best:   Enlarges or reduces the size of the image to occupy 
+#              the maximum possible area of the desktop without 
+#              going outside the desktop boundary and preserving the 
+#              aspect ratio of the image, i.e. a proportional size adjustment;
+#    - fill:   Sizes the image to cover the full area of the desktop, 
+#              preserving the aspect ratio, but extending beyond the boundary 
+#              of the desktop along one of its axes if necessary in order 
+#              to cover the background.

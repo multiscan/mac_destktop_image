@@ -12,31 +12,6 @@ from subprocess import run
 import sys
 from ruamel.yaml import YAML
 
-# Colors:
-#   - black   {0, 0, 0}
-#   - white   {100, 100, 100}
-#   - grey    {50, 50, 50}
-#   - dark    {20, 20, 20}
-#   - brown   {30, 7, 15}
-#   - green   {18, 24, 15}
-
-# Scalings:
-#   - fit:    Stretches the image to fit the desktop's width and height;
-#   - tile:   Repeat image to fill screen;
-#   - centre: Centres the image without enlarging, however it 
-#             will reduce the size of an image that would 
-#             otherwise spill outside the boundary of the desktop;
-#   - best:   Enlarges or reduces the size of the image to occupy 
-#             the maximum possible area of the desktop without 
-#             going outside the desktop boundary and preserving the 
-#             aspect ratio of the image, i.e. a proportional size adjustment;
-#   - fill:   Sizes the image to cover the full area of the desktop, 
-#             preserving the aspect ratio, but extending beyond the boundary 
-#             of the desktop along one of its axes if necessary in order 
-#             to cover the background.
-
-# This could be read from a yaml file
-
 CONFIG_PATH = Path(sys.argv[0]).with_suffix('.yml')
 CONFIG = YAML(typ='safe').load(CONFIG_PATH)
 
