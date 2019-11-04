@@ -2,6 +2,7 @@
 # The parent directory for all the desktop image directories
 # and the default settings to be used if not specified
 base: "/Users/cangiani/Pictures/Desktop/"
+debug: 0
 defaults:
   weight: 1
   scaling: "fill"

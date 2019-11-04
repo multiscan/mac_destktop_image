@@ -4,6 +4,7 @@
 # https://stackoverflow.com/questions/33533304/change-scaling-for-all-desktop-backgrounds-on-mac-via-a-script
 
 import glob
+import logging
 import os
 from pathlib import Path
 import random
@@ -14,6 +15,20 @@ from ruamel.yaml import YAML
 
 CONFIG_PATH = Path(sys.argv[0]).with_suffix('.yml')
 CONFIG = YAML(typ='safe').load(CONFIG_PATH)
+
+# Setup logging (yes it's overkill but at least it is standard)
+lfh = logging.FileHandler(str(Path(sys.argv[0]).with_suffix('.log')), 'a')
+logger = logging.getLogger(__name__)
+if (CONFIG["debug"] == 1):
+  lfh.setLevel(logging.DEBUG)
+  logger.setLevel(logging.DEBUG)
+else:
+  lfh.setLevel(logging.INFO)
+  logger.setLevel(logging.INFO)
+lfm = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+lfh.setFormatter(lfm)
+logger.addHandler(lfh)
+
 
 SCALINGS={
   "fill": 1,
@@ -62,11 +77,13 @@ random.seed()
 dd = weighted_choice(dirs)
 # dd = {"dir": "Test", "scaling": "best", "bgcolor": "black"}
 d = dd["dir"]
+logger.debug("choosing desktop image from " + dd['dir'])
 ff=glob.glob(d + "/*.jpg") + glob.glob(d + "/*.png")
 f=random.sample(ff, 1)[0]
+logger.info("setting desktop image " + f)
 bf=os.path.basename(f)
-s=SCALINGS[dd["scaling"]]
-c=COLORS[dd["bgcolor"]]
+s=SCALINGS.get("scaling", 5)
+c=COLORS.get("bgcolor", [0,0,0])
 
 dbpath = str( Path.home() / Path('Library/Application Support/Dock/desktoppicture.db'))
 
