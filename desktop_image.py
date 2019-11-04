@@ -80,10 +80,10 @@ d = dd["dir"]
 logger.debug("choosing desktop image from " + dd['dir'])
 ff=glob.glob(d + "/*.jpg") + glob.glob(d + "/*.png")
 f=random.sample(ff, 1)[0]
-logger.info("setting desktop image " + f)
 bf=os.path.basename(f)
-s=SCALINGS.get("scaling", 5)
-c=COLORS.get("bgcolor", [0,0,0])
+s=SCALINGS.get(dd.get("scaling", 5))
+c=COLORS.get(dd.get("color", "black"), [0,0,0])
+logger.info("setting desktop image %s. Scaling=%d, bgcolor=(%d,%d,%d)" % (f, s, c[0], c[1], c[2]))
 
 dbpath = str( Path.home() / Path('Library/Application Support/Dock/desktoppicture.db'))
 
