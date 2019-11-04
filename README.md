@@ -16,3 +16,11 @@ The command is the script `dimg`.
 
 ### Single shot
 By default, the script changes your desktop image. The image is chosen randomly from the directories listed in your configuration file. J
+
+### Periodic shots
+Install the periodic task with `dimg start` eventually passing the periodicity as the `-t` command option:
+```
+dimg -t 60 start 
+```
+When you have enough, just stop (and cleanup) with `dimg stop`.
+
