@@ -64,7 +64,7 @@ for d in CONFIG["dirs"]:
   m = CONFIG["defaults"].copy()
   m.update(d)
   if (not os.path.isabs(m["dir"])):
-    m["dir"] = CONFIG["base"] + m["dir"]
+    m["dir"] = CONFIG["base"] + "/" + m["dir"]
   dirs.append(m)
 
 random.seed()
