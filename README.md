@@ -5,7 +5,7 @@ More flexible desktop image cycler
  * Clone the repo where you want
  * make sure you have the following packages installed and usable by python:
     - ruamel.yaml
-    - sqlite3
+    - sqlite3 (should be in standard library)
  * copy `desktop_image.yml.example` as `desktop_image.yml` and edit with your preferences
 
 ### With pyenv

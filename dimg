@@ -1,11 +1,12 @@
 #!/bin/sh
+# set -o xtrace
 prg="$(cd $(dirname $0); pwd)/$(basename $0)"       # readlink -f 
 pmd="$(cd $(dirname $0); pwd)/desktop_image.py"
 lof="$(cd $(dirname $0); pwd)/desktop_image.log"
 
 laconf="$HOME/Library/LaunchAgents/desktop.background.rotate.plist"
 name="desktop.background.rotate"
-interval=120
+interval=600
 
 usage() {
   cat <<-__EOF
@@ -65,14 +66,27 @@ restart() {
 }
 
 run() {
+  # /Users/cangiani/.asdf/shims/python
   pef="$(dirname $0)/.python-version"
   if [ -f $pef ] ; then
     export PYENV_VERSION=$(cat $pef)
   fi
+  pef="$(dirname $0)/.tool-versions"
+  if [ -f $pef ] ; then
+    export ASDF_PYTHON_VERSION=$(cat $pef | awk '/^python/{print $2}')
+  fi  
   if [ -f $HOME/.pyenv/shims/python ] ; then
     $HOME/.pyenv/shims/python $pmd 
-  else
-    python $pmd
+  else 
+    if [ -f $HOME/.asdf/shims/python ] ; then
+      $HOME/.asdf/shims/python $pmd
+    else
+      if [ -f /usr/local/bin/python3 ] ; then
+        /usr/local/bin/python3 $pmd
+      else
+        python $pmd
+      fi
+    fi
   fi
 }
 
